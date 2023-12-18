@@ -45,6 +45,7 @@ namespace PerfView
             StreamWriter writerToCleanup = null;   // If we create a log file, we need to clean it up.  
             int retCode = -1;
             bool newConsoleCreated = false;        // If we create a new console, we need to wait before existing            
+            bool noAttend = false;
             try
             {
 #if !PERFVIEW_COLLECT
@@ -64,7 +65,7 @@ namespace PerfView
                 App.RelaunchIfNeeded(args);     // If we are running from a a network share, relaunch locally. 
 
                 // This does the real work
-                retCode = DoMain(args, ref newConsoleCreated, ref writerToCleanup);
+                retCode = DoMain(args, ref newConsoleCreated, ref noAttend, ref writerToCleanup);
             }
             catch (ThreadInterruptedException)
             {
@@ -99,7 +100,7 @@ namespace PerfView
             }
 
             // If we created a new console (collect command), prompt before closing it so the user has a chance to look at it.
-            if (newConsoleCreated)
+            if (!noAttend && newConsoleCreated)
             {
                 Console.WriteLine("Press enter to close window.");
                 Console.ReadLine();
@@ -117,7 +118,7 @@ namespace PerfView
         /// <param name="textWriterToCleanUp">If you create a StreamWriter, set this so we clean it up on exit.</param>
         /// <returns></returns>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        private static int DoMain(string[] args, ref bool newConsoleCreated, ref StreamWriter textWriterToCleanUp)
+        private static int DoMain(string[] args, ref bool newConsoleCreated, ref bool noAttendMode, ref StreamWriter textWriterToCleanUp)
         {
             Triggers.ETWEventTrigger.SessionNamePrefix = CommandProcessor.s_UserModeSessionName + "ETWTrigger";
             CommandLineArgs = new CommandLineArgs();
@@ -173,6 +174,7 @@ namespace PerfView
                 if (CommandLineArgs.NoGui)
                 {
                     newConsoleCreated = CreateConsole();
+                    noAttendMode = CommandLineArgs.NoAttend;
                     CommandProcessor.LogFile = Console.Out;
                 }
             }

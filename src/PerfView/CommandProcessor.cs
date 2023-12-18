@@ -3026,6 +3026,10 @@ namespace PerfView
                 cmdLineArgs += " /NoGui";
             }
 
+            if (parsedArgs.NoAttend)
+            {
+                cmdLineArgs += " /NoAttend";
+            }
             if (s_UserModeSessionName != "PerfViewSession")
             {
                 cmdLineArgs += " /SessionName:" + s_UserModeSessionName;

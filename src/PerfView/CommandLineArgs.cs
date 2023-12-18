@@ -215,6 +215,7 @@ namespace PerfView
 
         // Collect options
         public bool NoGui;
+        public bool NoAttend;
         public int CollectMultiple;     // Collect several instances (incrementing the file name)
 
         // Mark options
@@ -569,6 +570,7 @@ namespace PerfView
                 "Disables capturing of .NET version information during collection.");
             parser.DefineOptionalQualifier("NoGui", ref NoGui,
                 "Use the Command line version of the command (like on ARM).  Brings up a console window.  For batch scripts/automation use /LogFile instead (see users guide under 'Scripting' for more).");
+            parser.DefineOptionalQualifier("NoAttend", ref NoAttend, "Use to allow No prompt at end of session in combination with NoGui");
             parser.DefineOptionalQualifier("SafeMode", ref SafeMode, "Turn off parallelism and other risky features.");
             parser.DefineOptionalQualifier("RestartingToElevelate", ref RestartingToElevelate, "Internal: indicates that perfView is restarting to get Admin privileges.");
 
